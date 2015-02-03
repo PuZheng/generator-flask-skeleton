@@ -41,33 +41,44 @@ module.exports = yeoman.generators.Base.extend({
     writing: {
         app: function () {
 
-            _(['_bower.json', '_package.json', '_requirements.txt', ['_setup.py', {
+            _(['bower.json', 'package.json', 'requirements.txt', ['setup.py', {
                 projectName: this.projectName,
                 packageName: this.packageName,
             }]]).each(function (fname) {
                 if (typeof(fname) == 'string') {
                     this.fs.copy(
                         this.templatePath(fname),
-                        this.destinationPath(fname.substr(1))
+                        this.destinationPath(fname)
                     );
                 } else {
                     this.fs.copyTpl(
                         this.templatePath(fname[0]),
-                        this.destinationPath(fname[0].substr(1)),
+                        this.destinationPath(fname[0]),
                         fname[1]
                     );
                 
                 }
-            }.bind(this))
+            }.bind(this));
+
+            this.fs.copy(this.templatePath('__package__/__init__.py'), this.destinationPath(this.packageName + '/__init__.py'));
+            this.fs.copyTpl(this.templatePath('__package__/basemain.py'), this.destinationPath(this.packageName + '/basemain.py'), 
+                            {
+                                projectName: this.projectName,
+                            });
+            this.destinationRoot('test/static');
+            this.composeWith('h5bp');
+            this.destinationRoot('../../');
+            this.fs.move(this.destinationPath('test/static/index.html'), this.destinationPath('test/templates/index.html'));
+            this.fs.move(this.destinationPath('test/static/404.html'), this.destinationPath('test/templates/404.html'));
         },
 
         projectfiles: function () {
             this.fs.copy(
-                this.templatePath('editorconfig'),
+                this.templatePath('.editorconfig'),
                 this.destinationPath('.editorconfig')
             );
             this.fs.copy(
-                this.templatePath('jshintrc'),
+                this.templatePath('.jshintrc'),
                 this.destinationPath('.jshintrc')
             );
         }
