@@ -1,0 +1,6 @@
+language: node_js
+node_js:
+  - '0.10'
+before_install:
+  - currentfolder=${PWD##*/}
+  - if [ "$currentfolder" != 'generator-flask-skeleton' ]; then cd .. && eval "mv $currentfolder generator-flask-skeleton" && cd generator-flask-skeleton; fi
