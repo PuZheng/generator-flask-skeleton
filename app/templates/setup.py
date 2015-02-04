@@ -34,12 +34,12 @@ install_requires = []
 dependency_links = []
 
 for l in open('requirements.txt').xreadlines():
-    m = re.match("-e (git|svn|hg|bzr)\+(?P<link>.*)#(?P<egg>.+)", l.trim())
+    m = re.match("-e (git|svn|hg|bzr)\+(?P<link>.*)#(?P<egg>.+)", l.strip())
     if m:
         install_requires.append(m.groupdict()['egg'])
         dependency_links.append(m.groupdict()['link'])
     else:
-        install_requires.append(l.trim())
+        install_requires.append(l.strip())
 
 
 setup(

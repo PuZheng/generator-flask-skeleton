@@ -10,7 +10,7 @@ function runserver(mainFile, port) {
 }
 
 gulp.task('serve', function () {
-    runserver('runserver.py')
+    runserver('<%= packageName %>/runserver.py')
 });
 
 gulp.task('watch', function () {
@@ -22,9 +22,9 @@ gulp.task('watch', function () {
 });
 
 gulp.task('compass', function () {
-    shell.cd('static');
+    shell.cd('<%= packageName %>/static');
     shell.exec('compass compile');
-    shell.cd('../');
+    shell.cd('.././');
     gulp.src('static/css/**/*.css').pipe(livereload());
 });
 
@@ -36,7 +36,4 @@ gulp.task('make-test-db', function () {
     shell.exec('python scripts/make_test_data.py');
 });
 
-gulp.task('default', ['watch', 'server:portal'])
-gulp.task('admin', ['watch:admin', 'serve:admin'])
-
-
+gulp.task('default', ['watch', 'serve'])

@@ -2,15 +2,13 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
-var _ = require('underscore');
+var lodash = require('lodash');
+var walk = require('walk');
+var path = require('path');
 
 module.exports = yeoman.generators.Base.extend({
     initializing: function () {
         this.pkg = require('../package.json');
-    },
-
-    method1: function () {
-        console.log('method1');
     },
 
     prompting: function () {
@@ -29,47 +27,47 @@ module.exports = yeoman.generators.Base.extend({
             type: 'input',
             name: 'packageName',
             message: 'Your package name',
+        }, {
+            type: 'confirm',
+            name: 'bootstrap',
+            message: 'with bootstrap suite?',
+            default: true
         }];
 
+        this.templateArgs = {};
         this.prompt(prompts, function (props) {
-            this.projectName = props.projectName;
-            this.packageName = props.packageName;
+            this.templateArgs.projectName = props.projectName;
+            this.templateArgs.packageName = props.packageName;
+            this.templateArgs.bootstrap = props.bootstrap;
             done();
         }.bind(this));
     },
 
     writing: {
         app: function () {
+            lodash.each(['bower.json', 'package.json', 'requirements.txt', 
+                        'gulpfile.js', '.bowerrc', 'setup.py'], function (fname) {
+                            this.fs.copyTpl(
+                                this.templatePath(fname),
+                                this.destinationPath(fname),
+                                this.templateArgs
+                            );
+                        }.bind(this));
 
-            _(['bower.json', 'package.json', 'requirements.txt', ['setup.py', {
-                projectName: this.projectName,
-                packageName: this.packageName,
-            }]]).each(function (fname) {
-                if (typeof(fname) == 'string') {
-                    this.fs.copy(
-                        this.templatePath(fname),
-                        this.destinationPath(fname)
-                    );
-                } else {
-                    this.fs.copyTpl(
-                        this.templatePath(fname[0]),
-                        this.destinationPath(fname[0]),
-                        fname[1]
-                    );
-                
+            walk.walkSync(this.templatePath('__package__'), {
+                listeners: {
+                    file: function (root, stat, next) {
+                        var fullpath = path.join(root, stat.name);
+                        if (fullpath.indexOf('bower_components') == -1) {
+                            this.fs.copyTpl(fullpath,
+                                            this.destinationPath(this.templateArgs.packageName + '/' + 
+                                                                 path.relative(this.templatePath('__package__'), fullpath)), 
+                                            this.templateArgs);
+                        }
+                        next();
+                    }.bind(this),
                 }
-            }.bind(this));
-
-            this.fs.copy(this.templatePath('__package__/__init__.py'), this.destinationPath(this.packageName + '/__init__.py'));
-            this.fs.copyTpl(this.templatePath('__package__/basemain.py'), this.destinationPath(this.packageName + '/basemain.py'), 
-                            {
-                                projectName: this.projectName,
-                            });
-            this.destinationRoot('test/static');
-            this.composeWith('h5bp');
-            this.destinationRoot('../../');
-            this.fs.move(this.destinationPath('test/static/index.html'), this.destinationPath('test/templates/index.html'));
-            this.fs.move(this.destinationPath('test/static/404.html'), this.destinationPath('test/templates/404.html'));
+            });
         },
 
         projectfiles: function () {
@@ -81,12 +79,14 @@ module.exports = yeoman.generators.Base.extend({
                 this.templatePath('.jshintrc'),
                 this.destinationPath('.jshintrc')
             );
-        }
+        }, 
+
     },
 
     install: function () {
         this.installDependencies({
             skipInstall: this.options['skip-install']
         });
+        this.spawnCommand('python', ['setup.py', 'develop']);
     }
 });

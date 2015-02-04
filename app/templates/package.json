@@ -1,5 +1,12 @@
 {
   "name": "package",
   "version": "0.0.0",
-  "dependencies": {}
+  "dependencies": {
+    "gulp": "^3.8.10",
+    "gulp-compass": "^2.0.3"
+  },
+  "devDependencies": {
+    "gulp-livereload": "^3.7.0",
+    "shelljs": "^0.3.0"
+  }
 }
