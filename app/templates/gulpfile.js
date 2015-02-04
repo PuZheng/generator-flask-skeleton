@@ -15,10 +15,10 @@ gulp.task('serve', function () {
 
 gulp.task('watch', function () {
     livereload.listen();
-    gulp.watch('templates/**/*.html', function () {
-        gulp.src('templates/**/*.html').pipe(livereload());
+    gulp.watch('<%= packageName %>/templates/**/*.html', function () {
+        gulp.src('<%= packageName %>/templates/**/*.html').pipe(livereload());
     });
-    gulp.watch('static/sass/**/*.scss', ['compass'])
+    gulp.watch('<%= packageName %>/static/sass/**/*.scss', ['compass'])
 });
 
 gulp.task('compass', function () {
@@ -29,11 +29,11 @@ gulp.task('compass', function () {
 });
 
 gulp.task('init-db', function () {
-    shell.exec('python scripts/init_db.py');
+    shell.exec('python <%= packageName %>/scripts/init_db.py');
 });
 
 gulp.task('make-test-db', function () {
-    shell.exec('python scripts/make_test_data.py');
+    shell.exec('python <%= packageName %>/scripts/make_test_data.py');
 });
 
 gulp.task('default', ['watch', 'serve'])
