@@ -1,0 +1,1 @@
+{% macro bust() -%}{% if config.DEBUG %}?bust={{ range(1, 999999)|random }}{% endif %}{%- endmacro %}
