@@ -10,30 +10,30 @@ function runserver(mainFile, port) {
 }
 
 gulp.task('serve', function () {
-    runserver('<%= packageName %>/runserver.py')
+    runserver('runserver.py');
 });
 
 gulp.task('watch', function () {
     livereload.listen();
-    gulp.watch('<%= packageName %>/templates/**/*.html', function () {
-        gulp.src('<%= packageName %>/templates/**/*.html').pipe(livereload());
+    gulp.watch('templates/**/*.html', function () {
+        gulp.src('templates/**/*.html').pipe(livereload());
     });
-    gulp.watch('<%= packageName %>/static/sass/**/*.scss', ['compass'])
+    gulp.watch('static/sass/**/*.scss', ['compass']);
 });
 
 gulp.task('compass', function () {
-    shell.cd('<%= packageName %>/static');
+    shell.cd('static');
     shell.exec('compass compile');
-    shell.cd('.././');
+    shell.cd('../');
     gulp.src('static/css/**/*.css').pipe(livereload());
 });
 
 gulp.task('init-db', function () {
-    shell.exec('python <%= packageName %>/scripts/init_db.py');
+    shell.exec('python scripts/init_db.py');
 });
 
 gulp.task('make-test-db', function () {
-    shell.exec('python <%= packageName %>/scripts/make_test_data.py');
+    shell.exec('python scripts/make_test_data.py');
 });
 
-gulp.task('default', ['watch', 'serve'])
+gulp.task('default', ['watch', 'serve']);

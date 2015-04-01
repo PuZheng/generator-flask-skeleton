@@ -87,6 +87,6 @@ module.exports = yeoman.generators.Base.extend({
         this.installDependencies({
             skipInstall: this.options['skip-install']
         });
-        this.spawnCommand('python', ['setup.py', 'develop']);
+        //this.spawnCommand('python', ['setup.py', 'develop']);
     }
 });
