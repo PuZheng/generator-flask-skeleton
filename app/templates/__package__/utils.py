@@ -2,7 +2,8 @@
 import types
 
 
-def do_commit(session, obj, action="add"):
+def do_commit(db, obj, action="add"):
+    session = db.session
     if action == "add":
         if isinstance(obj, types.ListType) or \
            isinstance(obj, types.TupleType):
