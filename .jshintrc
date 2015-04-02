@@ -13,5 +13,7 @@
   "quotmark": "single",
   "undef": true,
   "unused": true,
-  "strict": true
+  "strict": true,
+  "laxcomma": true,
+  "expr": true     // prevents warning "Expected an assignment or function call and instead saw an expression."
 }

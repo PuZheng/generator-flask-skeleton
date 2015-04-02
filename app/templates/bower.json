@@ -4,7 +4,9 @@
   "dependencies": {
     "normalize.css": "~3.0.2",
     "modernizr": "~2.8.3",
+    <% if (bootstrap) { %>
     "bootstrap": "~3.3.2",
+    <% } %>
     "jquery": "1.11.2"
   }
 }
