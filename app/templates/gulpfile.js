@@ -5,8 +5,11 @@ var livereload = require('gulp-livereload');
 
 function runserver(mainFile, port) {
     'use strict';
-    var PIPE = { stdio: 'inherit' };
-    spawn('python', [mainFile, '-p', (port || 5000)], PIPE);
+    spawn('python', [mainFile, '-p', (port || 5000)], 
+          { 
+              stdio: 'inherit',
+              cwd: '<%= packageName %>',
+          });
 }
 
 gulp.task('serve', function () {
@@ -33,12 +36,20 @@ gulp.task('compass', function () {
 
 gulp.task('init-db', function () {
     'use strict';
-    shell.exec('python scripts/init_db.py');
+    spawn('python', ['scripts/init_db.py'], 
+          { 
+              stdio: 'inherit',
+              cwd: '<%= packageName %>',
+          });
 });
 
 gulp.task('make-test-db', function () {
     'use strict';
-    shell.exec('python scripts/make_test_data.py');
+    spawn('python', ['scripts/make_test_data.py'], 
+          { 
+              stdio: 'inherit',
+              cwd: '<%= packageName %>',
+          });
 });
 
 gulp.task('default', ['watch', 'serve']);
