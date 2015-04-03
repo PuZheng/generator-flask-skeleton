@@ -1,3 +1,22 @@
+{% macro flash() -%}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="ui grid flash">
+    <div class="column">
+    {% for category, message in messages %}
+      <div class="ui {{ category }} message">
+        <i class="close icon"></i>
+        <div class="header">
+          {{ message }}
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+{% endwith %}
+
+{%- endmacro %}
 <!doctype html>
 <html class="no-js" lang="">
     <head>
@@ -28,10 +47,8 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <div class="container">
-          {% block main %}
-          {% endblock %}
-        </div>
+        {{ flash() }}
+        {% block main %} {% endblock %}
 
         {% block tails %}
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

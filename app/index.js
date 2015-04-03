@@ -53,7 +53,6 @@ module.exports = yeoman.generators.Base.extend({
                                 this.templateArgs
                             );
                         }.bind(this));
-
             walk.walkSync(this.templatePath('__package__'), {
                 listeners: {
                     file: function (root, stat, next) {
