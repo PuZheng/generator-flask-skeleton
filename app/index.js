@@ -46,7 +46,7 @@ module.exports = yeoman.generators.Base.extend({
     writing: {
         app: function () {
             lodash.each(['bower.json', 'package.json', 'requirements.txt', 
-                        'gulpfile.js', '.bowerrc', 'setup.py'], function (fname) {
+                        'gulpfile.js', '.bowerrc', 'setup.py', '.gitignore'], function (fname) {
                             this.fs.copyTpl(
                                 this.templatePath(fname),
                                 this.destinationPath(fname),
