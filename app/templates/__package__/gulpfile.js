@@ -8,7 +8,6 @@ function runserver(mainFile, port) {
     spawn('python', [mainFile, '-p', (port || 5000)], 
           { 
               stdio: 'inherit',
-              cwd: '<%= packageName %>',
           });
 }
 
@@ -20,18 +19,18 @@ gulp.task('serve', function () {
 gulp.task('watch', function () {
     'use strict';
     livereload.listen();
-    gulp.watch('<%= packageName %>/templates/**/*.html', function () {
-        gulp.src('<%= packageName %>/templates/**/*.html').pipe(livereload());
+    gulp.watch('templates/**/*.html', function () {
+        gulp.src('templates/**/*.html').pipe(livereload());
     });
-    gulp.watch('<%= packageName %>/static/sass/**/*.scss', ['compass']);
+    gulp.watch('static/sass/**/*.scss', ['compass']);
 });
 
 gulp.task('compass', function () {
     'use strict';
-    shell.cd('<%= packageName %>/static');
+    shell.cd('static');
     shell.exec('compass compile');
-    shell.cd('../../');
-    gulp.src('<%= packageName %>/static/css/**/*.css').pipe(livereload());
+    shell.cd('..');
+    gulp.src('static/css/**/*.css').pipe(livereload());
 });
 
 gulp.task('init-db', function () {
@@ -39,7 +38,6 @@ gulp.task('init-db', function () {
     spawn('python', ['scripts/init_db.py'], 
           { 
               stdio: 'inherit',
-              cwd: '<%= packageName %>',
           });
 });
 
@@ -48,7 +46,6 @@ gulp.task('make-test-db', function () {
     spawn('python', ['scripts/make_test_data.py'], 
           { 
               stdio: 'inherit',
-              cwd: '<%= packageName %>',
           });
 });
 
