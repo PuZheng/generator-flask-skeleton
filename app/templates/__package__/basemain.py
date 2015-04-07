@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, render_from_directory
 from flask.ext.babel import Babel
 
 app = Flask(__name__, instance_relative_config=True)
@@ -12,6 +12,12 @@ app.config.from_pyfile(os.path.join(os.getcwd(), "config.py"), silent=True)
 @app.route('/index.html')
 def index():
     return render_template('index.html')
+
+
+@app.route('/uploads/<path:filename>')
+def uploads(filename=None):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename, as_attachment=True)
 
 
 Babel(app)
