@@ -41,7 +41,7 @@ gulp.task('init-db', function () {
           });
 });
 
-gulp.task('make-test-db', function () {
+gulp.task('make-test-data', function () {
     'use strict';
     spawn('python', ['scripts/make_test_data.py'], 
           { 
