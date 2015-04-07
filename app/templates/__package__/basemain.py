@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, send_from_directory
 from flask.ext.babel import Babel
 from path import path
-from sh import sh
+import sh
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object("<%= packageName %>.default_settings")

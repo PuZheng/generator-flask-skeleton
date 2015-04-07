@@ -3,3 +3,5 @@ Flask-Babel
 Flask-SQLAlchemy
 Flask-WTF
 SQLAlchemy
+sh
+path.py
