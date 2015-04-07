@@ -1,7 +1,9 @@
 # -*- coding: UTF-8 -*-
 import os
-from flask import Flask, render_template, render_from_directory
+from flask import Flask, render_template, send_from_directory
 from flask.ext.babel import Babel
+from path import path
+from sh import sh
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object("<%= packageName %>.default_settings")
@@ -21,3 +23,8 @@ def uploads(filename=None):
 
 
 Babel(app)
+
+
+path_ = path.joinpath(app.config['UPLOAD_FOLDER'])
+if not path_.exists():
+    sh.mkdir('-p', path_)
