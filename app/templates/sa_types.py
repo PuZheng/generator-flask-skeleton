@@ -13,7 +13,7 @@ class ChoiceType(types.TypeDecorator):
     def __init__(self, choices, *args, **kw):
         '''
         :type choices: dict
-        :param choices: key是实际存储值, value是展示值
+        :param choices: key is the value stored, value is the representation
         '''
         self.choices = dict(choices)
         super(ChoiceType, self).__init__(*args, **kw)
@@ -39,4 +39,4 @@ class ListType(types.TypeDecorator):
         return '|'.join(value)
 
     def process_result_value(self, value, dialect):
-        return value.split('|')
+        return value.split('|') if value else []
