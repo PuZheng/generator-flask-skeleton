@@ -2,6 +2,7 @@
 from <%= packageName %>.database import db
 from <%= packageName %>.utils import to_camel_case
 from flask.ext.login import UserMixin
+from <%= packageName %>.sa_types import ListType, ChoiceType
 
 class JSONSerializable(object):
 

@@ -53,14 +53,14 @@ module.exports = yeoman.generators.Base.extend({
                                 this.templateArgs
                             );
                         }.bind(this));
-            walk.walkSync(this.templatePath('__package__'), {
+            walk.walkSync(this.templatePath('package'), {
                 listeners: {
                     file: function (root, stat, next) {
                         var fullpath = path.join(root, stat.name);
                         if (fullpath.indexOf('bower_components') === -1) {
                             this.fs.copyTpl(fullpath,
                                             this.destinationPath(this.templateArgs.packageName + '/' + 
-                                                                 path.relative(this.templatePath('__package__'), fullpath)), 
+                                                                 path.relative(this.templatePath('package'), fullpath)), 
                                             this.templateArgs);
                         }
                         next();

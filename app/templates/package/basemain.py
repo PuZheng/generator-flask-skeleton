@@ -50,8 +50,11 @@ def uploads():
     else:  # DELETE
         match = app.url_map.bind('').match(request.json['url'])
         if match and match[0] == 'assets':
-            sh.rm(path.joinpath(app.config['ASSETS_FOLDER'],
-                                match[1]['filename']))
+            path_ = path.joinpath(app.config['ASSETS_FOLDER'],
+                                  match[1]['filename'])
+            if path_.exists():
+                sh.rm(path.joinpath(app.config['ASSETS_FOLDER'],
+                                    match[1]['filename']))
             return 'ok'
         abort(404)
 
