@@ -1,8 +1,3 @@
-/**
- * l20n
- * The l20n module.
- * @author @fernandogmar
- */
 define(["l20n", "module"], function(L20n, module) {
     "use strict";
     var config = module.config ? module.config() : {};
@@ -12,12 +7,9 @@ define(["l20n", "module"], function(L20n, module) {
         extension: 'l20n',
         prefix: '{{',
         suffix: '}}',
-        locale: 'en'
     };
 
     var l20nPlugin = {};
-
-    l20nPlugin.version = '0.0.3';
 
     l20nPlugin.load = function(resourceName, parentRequire, onload, masterConfig) {
         config = helper.extend(config, defaults, helper.getConfig(masterConfig));
@@ -25,8 +17,16 @@ define(["l20n", "module"], function(L20n, module) {
         var resource_id =  parentRequire.toUrl(full_name);
 
         var ctx = L20n.getContext(resource_id);
-        ctx.linkResource(helper.parseName(resource_id, config));
-        ctx.freeze();
+
+        ctx.registerLocales(config.locale || 'en-US', ['zh-CN', 'en']);
+        ctx.linkResource(function(locale) {
+            return '/static/locales/' + locale + '/default.l20n';
+        });
+        if (config.locale) {
+            ctx.requestLocales(config.locale);
+        } else {
+            ctx.requestLocales(navigator.language || navigator.browserLanguage);
+        }
 
         var addEventListeners = function() {
             ctx.addEventListener('ready', onReady);
@@ -83,6 +83,9 @@ define(["l20n", "module"], function(L20n, module) {
             }
         },
         parseName: function(file_name, config){
+            if (!config.locale) {
+                return file_name;
+            }
             var to_replace = config.prefix + "locale" + config.suffix;
             return file_name.replace(to_replace, config.locale);
         }
