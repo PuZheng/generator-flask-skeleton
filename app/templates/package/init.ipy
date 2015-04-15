@@ -1,3 +1,3 @@
 # coding: utf-8
-from <%= packageName %>.basemain import app; from <%= packageName %>.database import db; from <%= packageName %>.models import *
+from <%= packageName %>.basemain import app; from <%= packageName %>.database import db; from <%= packageName %>.models import *; from <%= packageName %>.utils import do_commit
 

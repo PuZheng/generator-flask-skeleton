@@ -92,3 +92,39 @@ class DynamicJSONEncoder(JSONEncoder):
         return super(DynamicJSONEncoder, self).default(o)
 
 app.json_encoder = DynamicJSONEncoder
+
+
+mail = Mail(app)
+
+
+def email_exception(traceback):
+
+    recipients = app.config.get('EXCEPTION_EMAIL_RECIPIENTS')
+    if not recipients:
+        return
+    msg = Message(subject=_(u"failed request: %(method)s %(url)s",
+                            method=request.method,
+                            url=request.url),
+                  html=traceback.render_summary(),
+                  recipients=recipients)
+    mail.send(msg)
+
+
+if app.DEBUG or app.TESTING:
+    @app.errorhandler(Exception)
+    def error(error):
+        if isinstance(error, SQLAlchemyError):
+            db.session.rollback()
+        from werkzeug.debug.tbtools import get_current_traceback
+
+        traceback = get_current_traceback(skip=1, show_hidden_frames=False,
+                                          ignore_system_exceptions=True)
+        app.logger.error("%s %s" % (request.method, request.url))
+        app.logger.error(traceback.plaintext)
+        email_exception(traceback)
+        return render_template('error.html',
+                               title=_(u"failed request: %(method)s %(url)s",
+                                       method=request.method,
+                                       url=request.url),
+                               text=traceback.render_summary(),
+                               backref=request.args.get('backref', '/'))
