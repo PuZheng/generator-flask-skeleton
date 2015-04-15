@@ -5,3 +5,4 @@ Flask-WTF
 SQLAlchemy
 sh
 path.py
+Flask-Mail
