@@ -110,7 +110,7 @@ def email_exception(traceback):
     mail.send(msg)
 
 
-if app.DEBUG or app.TESTING:
+if app.debug or app.testing:
     @app.errorhandler(Exception)
     def error(error):
         if isinstance(error, SQLAlchemyError):
