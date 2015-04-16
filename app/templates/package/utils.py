@@ -4,6 +4,7 @@ import random
 import string
 import re
 import collections
+from path import path
 
 
 def random_str(size, chars=string.ascii_uppercase + string.digits):
@@ -32,3 +33,14 @@ def to_camel_case(arg):
         return dict((to_camel_case(k), v) for k, v in arg.items())
     assert isinstance(arg, basestring)
     return re.sub(r'_([a-z0-9])', lambda m: m.groups()[0].upper(), arg)
+
+
+def asset_for(url):
+    from flask import current_app
+    match = current_app.url_map.bind('').match(url)
+    if match and match[0] == 'assets':
+        path_ = path.joinpath(current_app.config['ASSETS_FOLDER'],
+                              match[1]['filename'])
+        if path_.exists():
+            return path.joinpath(current_app.config['ASSETS_FOLDER'],
+                                 match[1]['filename'])
