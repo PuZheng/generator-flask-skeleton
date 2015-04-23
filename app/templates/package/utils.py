@@ -44,3 +44,11 @@ def asset_for(url):
         if path_.exists():
             return path.joinpath(current_app.config['ASSETS_FOLDER'],
                                  match[1]['filename'])
+
+
+def log_form_error(form):
+    if form.errors:
+        for k, v in form.errors.iteritems():
+            print k + ':'
+            for e in v:
+                print '\t' + e
