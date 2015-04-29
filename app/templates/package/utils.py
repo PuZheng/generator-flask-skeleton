@@ -32,3 +32,8 @@ def to_camel_case(arg):
         return dict((to_camel_case(k), v) for k, v in arg.items())
     assert isinstance(arg, basestring)
     return re.sub(r'_([a-z0-9])', lambda m: m.groups()[0].upper(), arg)
+
+
+def to_underscore(arg):
+    tmp = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', arg)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', tmp).lower()
