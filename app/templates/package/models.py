@@ -8,7 +8,7 @@ class Unicodable(object):
 
     @property
     def _unicode_fields(self):
-        return self.__mapper__.columns.keys()
+        return [k for k in self.__mapper__.columns.keys() if k != 'id']
 
     def __unicode__(self):
         ret = self.__class__.__name__
