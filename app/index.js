@@ -46,7 +46,7 @@ module.exports = yeoman.generators.Base.extend({
     writing: {
         app: function () {
             lodash.each(['bower.json', 'package.json', 'requirements.txt', 
-                        'gulpfile.js', '.bowerrc', 'setup.py', '.gitignore'], function (fname) {
+                        '.bowerrc', 'setup.py', '.gitignore'], function (fname) {
                             this.fs.copyTpl(
                                 this.templatePath(fname),
                                 this.destinationPath(fname),
@@ -57,7 +57,7 @@ module.exports = yeoman.generators.Base.extend({
                 listeners: {
                     file: function (root, stat, next) {
                         var fullpath = path.join(root, stat.name);
-                        if (fullpath.indexOf('bower_components') === -1) {
+                        if (fullpath.indexOf('bower_components') === -1 && fullpath.indexOf('main.js.mtpl') === -1) {
                             this.fs.copyTpl(fullpath,
                                             this.destinationPath(this.templateArgs.packageName + '/' + 
                                                                  path.relative(this.templatePath('package'), fullpath)), 
@@ -67,6 +67,10 @@ module.exports = yeoman.generators.Base.extend({
                     }.bind(this),
                 }
             });
+            this.fs.copy(
+                this.templatePath('package/main.js.mtpl'),
+                this.destinationPath(this.templateArgs.packageName + '/main.js.mtpl')
+            );
         },
 
         projectfiles: function () {

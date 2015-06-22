@@ -1,0 +1,31 @@
+require.config({
+    baseUrl: '/static/js',
+    map: {
+        '*': {
+            // 这个是一个很脏的把戏， 因为压缩时，r.js必须依靠text.js, 所以不能
+            // 将text设置成为"empty:", 为了避免将text.js压缩到r.js中， 必须将其
+            // 加入到excludes中, 具体看https://github.com/jrburke/r.js/issues/221
+
+            <% ['text', 'css'].forEach(function (lib) { %>
+                '<%= lib %>': '<%= urlRoot %><%= scriptsMap[lib] %>.js',
+            <% }) %>
+        }
+    },
+    urlArgs: "bust=" + (new Date()).getTime(),
+    paths: {
+        <% libs.forEach(function (lib) { %>
+            <% if (scriptsMap[lib]) { %>
+            '<%= lib %>': '<%= (scriptsMap[lib].indexOf('http://') == -1)? urlRoot + scriptsMap[lib]: scriptsMap[lib] %>',
+            <% } %>
+        <% }) %>
+    },
+    shim: {
+        <% libs.forEach(function (lib) { %>
+            <% if (shimsMap[lib]) { %>
+            '<%= lib %>': <%= JSON.stringify(shimsMap[lib]) %>,
+            <% } %>
+        <% }) %>
+    }
+});
+
+require(['<%= app %>/<%= mod? mod + '/': '' %>app'], function () {});

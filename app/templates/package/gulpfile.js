@@ -49,4 +49,31 @@ gulp.task('make-test-data', function () {
           });
 });
 
+gulp.task('render', ['compass'], function () {
+    var scriptsMap = yaml.load('scripts.yml');
+    var shimsMap = yaml.load('shims.yml');
+    [
+        {
+            app: 'foo',
+            mods: ['list', 'object']
+        }
+    ].forEach(function (app) {
+        var libs = yaml.load('./' + app.app + '/libs.yml');
+        app.mods.forEach(function (mod) {
+            gulp.src(['main.js.mtpl']).pipe(data({
+                scriptsMap: scriptsMap,
+                shimsMap: shimsMap,
+                urlRoot: '/',
+                libs: libs[mod],
+                app: app.app,
+                mod: mod,
+            })).pipe(template()).pipe(rename(function (path) {
+                path.extname = '';
+            })).pipe(gulp.dest('static/js/' + app.app + '/' + mod + '/'));
+        });
+    });
+    gulp.src('templates/gas_station/import-manifest.md').pipe(markdown()).pipe(gulp.dest('templates/gas_station'));
+    gulp.src('templates/utilities/gas-station-canonize-help.md').pipe(markdown()).pipe(gulp.dest('templates/utilities'));
+});
+
 gulp.task('default', ['watch', 'serve']);
