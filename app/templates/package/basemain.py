@@ -6,7 +6,7 @@ from werkzeug import secure_filename
 from path import path
 import sh
 
-from <%= packageName %>.utils import random_str
+from <%= packageName %>.utils import random_str, asset_for
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object("<%= packageName %>.default_settings")
@@ -48,16 +48,11 @@ def uploads():
             })
         abort(403)
     else:  # DELETE
-        match = app.url_map.bind('').match(request.json['url'])
-        if match and match[0] == 'assets':
-            path_ = path.joinpath(app.config['ASSETS_FOLDER'],
-                                  match[1]['filename'])
-            if path_.exists():
-                sh.rm(path.joinpath(app.config['ASSETS_FOLDER'],
-                                    match[1]['filename']))
+        fpath = asset_for(request.json['url'])
+        if fpath:
+            sh.rm(request.json['url'])
             return 'ok'
         abort(404)
-
 
 
 Babel(app)
@@ -128,3 +123,6 @@ if app.debug or app.testing:
                                        url=request.url),
                                text=traceback.render_summary(),
                                backref=request.args.get('backref', '/'))
+
+from flask.ext.debugtoolbar import DebugToolbarExtension
+DebugToolbarExtension(app)
