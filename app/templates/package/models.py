@@ -20,8 +20,8 @@ class Unicodable(object):
             if value:
                 l.append([field, value])
 
-        return ('<' + ret + '(' + ','.join([':'.join(map(str, [k, v])) for k,
-                                            v in l]) + ')' + '>')
+        return (u'<' + ret + u'(' + ','.join([':'.join(map(unicode, [k, v]))
+                                              for k, v in l]) + u')>')
 
     def __str__(self):
         return self.__unicode__().encode('utf-8')
